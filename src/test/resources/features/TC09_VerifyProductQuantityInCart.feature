@@ -1,4 +1,4 @@
- @tc09 @regression @products
+@tc09 @regression @products
 Feature: Verify Product quantity in Cart
 
   # TC09: Verify Product quantity in Cart
