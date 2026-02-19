@@ -72,7 +72,7 @@ AutomationExcercisesCucumber/
 - **pages** – Page Objects (BasePage + application pages)
 - **hooks** – Cucumber hooks (`@Before`, `@After`, `@BeforeStep`) – browser setup, cookie/ad overlays
 - **steps** – Gherkin step definitions (`Given` / `When` / `Then`)
-- **runner** – `CucumberTestRunner` executed via Maven profile `cucumber`
+- **runner** – `CucumberTestRunner` executed via Maven profile `cucumber`; scenarios run **in parallel** (4 threads, configurable in `pom.xml`)
 - **utilities** – `WebDriverFactory`, `ConfigReader`
 - **resources/config.properties** – environment configuration
 - **resources/features** – Cucumber `.feature` files

@@ -19,8 +19,8 @@ public class CommonSteps {
 
     @Given("I open the browser")
     public void iOpenTheBrowser() {
-        Assert.assertNotNull(Hooks.driver, "Browser should be started");
-        ScenarioContext.put(ScenarioContext.HOME_PAGE, new HomePage(Hooks.driver));
+        Assert.assertNotNull(Hooks.getDriver(), "Browser should be started");
+        ScenarioContext.put(ScenarioContext.HOME_PAGE, new HomePage(Hooks.getDriver()));
     }
 
     @And("I navigate to the home page")
@@ -39,11 +39,11 @@ public class CommonSteps {
         if ("Signup / Login".equals(buttonText)) {
             HomePage homePage = ScenarioContext.get(ScenarioContext.HOME_PAGE);
             homePage.clickSignupLogin();
-            ScenarioContext.put(ScenarioContext.LOGIN_PAGE, new LoginPage(Hooks.driver));
+            ScenarioContext.put(ScenarioContext.LOGIN_PAGE, new LoginPage(Hooks.getDriver()));
         } else if ("Contact Us".equals(buttonText)) {
             HomePage homePage = ScenarioContext.get(ScenarioContext.HOME_PAGE);
             homePage.clickContactUs();
-            ScenarioContext.put(ScenarioContext.CONTACT_US_PAGE, new ContactUsPage(Hooks.driver));
+            ScenarioContext.put(ScenarioContext.CONTACT_US_PAGE, new ContactUsPage(Hooks.getDriver()));
         }
     }
 
@@ -86,7 +86,7 @@ public class CommonSteps {
                     String uniqueEmail = generateUniqueEmail(lastEnteredEmail);
                     loginPage.enterNewUserNameAndEmail(lastEnteredName, uniqueEmail);
                     loginPage.clickSignupButton();
-                    signupPage = new SignupPage(Hooks.driver);
+                    signupPage = new SignupPage(Hooks.getDriver());
                     ScenarioContext.put(ScenarioContext.SIGNUP_PAGE, signupPage);
                 } else {
                     break;
@@ -105,14 +105,14 @@ public class CommonSteps {
     public void iClickTheButton(String buttonText) {
         if ("Cart".equals(buttonText)) {
             HomePage homePage = ScenarioContext.get(ScenarioContext.HOME_PAGE);
-            if (homePage == null) homePage = new HomePage(Hooks.driver);
+            if (homePage == null) homePage = new HomePage(Hooks.getDriver());
             homePage.clickCart();
         }
     }
 
     @Then("I should be navigated to the login page")
     public void iShouldBeNavigatedToTheLoginPage() {
-        LoginPage loginPage = new LoginPage(Hooks.driver);
+        LoginPage loginPage = new LoginPage(Hooks.getDriver());
         Assert.assertTrue(
                 loginPage.isLoginToYourAccountSectionVisible(),
                 "User should be redirected to login page"
@@ -142,7 +142,7 @@ public class CommonSteps {
             );
         } else if ("ACCOUNT CREATED!".equals(messageText)) {
             if (accountCreatedPage == null) {
-                accountCreatedPage = new AccountCreatedPage(Hooks.driver);
+                accountCreatedPage = new AccountCreatedPage(Hooks.getDriver());
                 ScenarioContext.put(ScenarioContext.ACCOUNT_CREATED_PAGE, accountCreatedPage);
             }
             Assert.assertTrue(
@@ -155,7 +155,7 @@ public class CommonSteps {
                     "ACCOUNT DELETED! should be visible"
             );
         } else if ("Your order has been placed successfully!".equals(messageText)) {
-            OrderSuccessPage orderSuccessPage = new OrderSuccessPage(Hooks.driver);
+            OrderSuccessPage orderSuccessPage = new OrderSuccessPage(Hooks.getDriver());
             Assert.assertTrue(
                     orderSuccessPage.waitForOrderSuccessMessageOrPaymentDone(),
                     "\"Your order has been placed successfully!\" message or payment_done page should be visible"

@@ -16,14 +16,14 @@ public class ProductsSteps {
     public void iClickOnProductsButton() {
         HomePage homePage = ScenarioContext.get(ScenarioContext.HOME_PAGE);
         homePage.clickProducts();
-        ScenarioContext.put(ScenarioContext.PRODUCTS_PAGE, new ProductsPage(Hooks.driver));
+        ScenarioContext.put(ScenarioContext.PRODUCTS_PAGE, new ProductsPage(Hooks.getDriver()));
     }
 
     @Then("I should be navigated to the All Products page")
     public void iShouldBeNavigatedToAllProductsPage() {
         ProductsPage productsPage = ScenarioContext.get(ScenarioContext.PRODUCTS_PAGE);
         if (productsPage == null) {
-            productsPage = new ProductsPage(Hooks.driver);
+            productsPage = new ProductsPage(Hooks.getDriver());
             ScenarioContext.put(ScenarioContext.PRODUCTS_PAGE, productsPage);
         }
         Assert.assertTrue(
@@ -46,7 +46,7 @@ public class ProductsSteps {
         if ("View Product".equals(linkText)) {
             ProductsPage productsPage = ScenarioContext.get(ScenarioContext.PRODUCTS_PAGE);
             productsPage.clickFirstViewProduct();
-            ScenarioContext.put(ScenarioContext.PRODUCT_DETAIL_PAGE, new ProductDetailPage(Hooks.driver));
+            ScenarioContext.put(ScenarioContext.PRODUCT_DETAIL_PAGE, new ProductDetailPage(Hooks.getDriver()));
         }
     }
 
@@ -54,7 +54,7 @@ public class ProductsSteps {
     public void iShouldBeOnProductDetailPage() {
         ProductDetailPage productDetailPage = ScenarioContext.get(ScenarioContext.PRODUCT_DETAIL_PAGE);
         if (productDetailPage == null) {
-            productDetailPage = new ProductDetailPage(Hooks.driver);
+            productDetailPage = new ProductDetailPage(Hooks.getDriver());
             ScenarioContext.put(ScenarioContext.PRODUCT_DETAIL_PAGE, productDetailPage);
         }
         Assert.assertTrue(

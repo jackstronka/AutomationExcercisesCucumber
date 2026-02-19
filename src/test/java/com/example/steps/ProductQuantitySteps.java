@@ -16,7 +16,7 @@ public class ProductQuantitySteps {
     public void iClickOnViewProductForFirstProductOnHomePage() {
         HomePage homePage = ScenarioContext.get(ScenarioContext.HOME_PAGE);
         homePage.clickFirstHomeViewProduct();
-        ScenarioContext.put(ScenarioContext.PRODUCT_DETAIL_PAGE, new ProductDetailPage(Hooks.driver));
+        ScenarioContext.put(ScenarioContext.PRODUCT_DETAIL_PAGE, new ProductDetailPage(Hooks.getDriver()));
     }
 
     @When("I set product quantity to {int}")
@@ -39,7 +39,7 @@ public class ProductQuantitySteps {
 
     @Then("I should see the product in cart with quantity {int}")
     public void iShouldSeeTheProductInCartWithQuantity(int expectedQuantity) {
-        CartPage cartPage = new CartPage(Hooks.driver);
+        CartPage cartPage = new CartPage(Hooks.getDriver());
         cartPage.waitForProductToAppear();
         Assert.assertTrue(
                 cartPage.isAnyProductVisible(),

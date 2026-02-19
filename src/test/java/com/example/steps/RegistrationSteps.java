@@ -14,7 +14,7 @@ public class RegistrationSteps {
     public void iClickTheSignupButtonOnSignupForm() {
         LoginPage loginPage = ScenarioContext.get(ScenarioContext.LOGIN_PAGE);
         loginPage.clickSignupButton();
-        ScenarioContext.put(ScenarioContext.SIGNUP_PAGE, new SignupPage(Hooks.driver));
+        ScenarioContext.put(ScenarioContext.SIGNUP_PAGE, new SignupPage(Hooks.getDriver()));
     }
 
     @When("I click Create Account on signup form")

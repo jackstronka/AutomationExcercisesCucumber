@@ -35,7 +35,7 @@ public class LoginSteps {
         ScenarioContext.put(ScenarioContext.REGISTERED_PASSWORD, password);
         HomePage homePage = ScenarioContext.get(ScenarioContext.HOME_PAGE);
         homePage.clickSignupLogin();
-        LoginPage loginPage = new LoginPage(Hooks.driver);
+        LoginPage loginPage = new LoginPage(Hooks.getDriver());
         ScenarioContext.put(ScenarioContext.LOGIN_PAGE, loginPage);
 
         String registeredEmail = CommonSteps.generateUniqueEmail(
@@ -45,7 +45,7 @@ public class LoginSteps {
         loginPage.enterNewUserNameAndEmail(name, registeredEmail);
         loginPage.clickSignupButton();
 
-        SignupPage signupPage = new SignupPage(Hooks.driver);
+        SignupPage signupPage = new SignupPage(Hooks.getDriver());
         ScenarioContext.put(ScenarioContext.SIGNUP_PAGE, signupPage);
         completeSignupAndLogout(signupPage, password, title, day, month, year,
                 firstName, lastName, address, country, state, city, zipcode, mobile);
@@ -57,12 +57,12 @@ public class LoginSteps {
                                                     String country, String state, String city, String zipcode, String mobile) {
         HomePage homePage = ScenarioContext.get(ScenarioContext.HOME_PAGE);
         homePage.clickSignupLogin();
-        LoginPage loginPage = new LoginPage(Hooks.driver);
+        LoginPage loginPage = new LoginPage(Hooks.getDriver());
         ScenarioContext.put(ScenarioContext.LOGIN_PAGE, loginPage);
         loginPage.enterNewUserNameAndEmail(name, email);
         loginPage.clickSignupButton();
 
-        SignupPage signupPage = new SignupPage(Hooks.driver);
+        SignupPage signupPage = new SignupPage(Hooks.getDriver());
         ScenarioContext.put(ScenarioContext.SIGNUP_PAGE, signupPage);
 
         if (signupPage.isEnterAccountInformationSectionVisible()) {
@@ -70,7 +70,7 @@ public class LoginSteps {
                     firstName, lastName, address, country, state, city, zipcode, mobile);
         }
 
-        homePage = new HomePage(Hooks.driver);
+        homePage = new HomePage(Hooks.getDriver());
         homePage.navigateToHome();
         ScenarioContext.put(ScenarioContext.HOME_PAGE, homePage);
     }
@@ -84,10 +84,10 @@ public class LoginSteps {
         signupPage.agreeToSpecialOffers();
         signupPage.fillAddressDetails(firstName, lastName, address, country, state, city, zipcode, mobile);
         signupPage.clickCreateAccount();
-        AccountCreatedPage accountCreatedPage = new AccountCreatedPage(Hooks.driver);
+        AccountCreatedPage accountCreatedPage = new AccountCreatedPage(Hooks.getDriver());
         ScenarioContext.put(ScenarioContext.ACCOUNT_CREATED_PAGE, accountCreatedPage);
         accountCreatedPage.clickContinue();
-        LoginPage loginPage = new LoginPage(Hooks.driver);
+        LoginPage loginPage = new LoginPage(Hooks.getDriver());
         ScenarioContext.put(ScenarioContext.LOGIN_PAGE, loginPage);
         loginPage.clickLogout();
     }

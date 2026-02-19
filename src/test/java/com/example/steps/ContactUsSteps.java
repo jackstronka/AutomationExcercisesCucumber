@@ -30,7 +30,7 @@ public class ContactUsSteps {
     public void iClickTheHomeButtonOnContactUsPage() {
         ContactUsPage contactUsPage = ScenarioContext.get(ScenarioContext.CONTACT_US_PAGE);
         contactUsPage.clickHome();
-        ScenarioContext.put(ScenarioContext.HOME_PAGE, new HomePage(Hooks.driver));
+        ScenarioContext.put(ScenarioContext.HOME_PAGE, new HomePage(Hooks.getDriver()));
     }
 
     @When("I fill in the contact form")

@@ -1,6 +1,7 @@
 package com.example.utilities;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -45,8 +46,15 @@ public class WebDriverFactory {
                 prefs.put("autofill.credit_card_enabled", false);
                 prefs.put("download.default_directory", downloadPath);
                 chromeOptions.setExperimentalOption("prefs", prefs);
+                String loadStrategy = ConfigReader.get("pageLoadStrategy", "eager");
+                if ("eager".equalsIgnoreCase(loadStrategy)) {
+                    chromeOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
+                } else if ("none".equalsIgnoreCase(loadStrategy)) {
+                    chromeOptions.setPageLoadStrategy(PageLoadStrategy.NONE);
+                }
                 if (headless) {
-                    chromeOptions.addArguments("--headless");
+                    chromeOptions.addArguments("--headless=new");
+                    chromeOptions.addArguments("--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage");
                 }
                 driver = new ChromeDriver(chromeOptions);
                 break;

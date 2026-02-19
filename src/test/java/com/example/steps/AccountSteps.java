@@ -23,7 +23,7 @@ public class AccountSteps {
     public void iClickContinueAfterAccountIsCreated() {
         AccountCreatedPage accountCreatedPage = ScenarioContext.get(ScenarioContext.ACCOUNT_CREATED_PAGE);
         if (accountCreatedPage == null) {
-            accountCreatedPage = new AccountCreatedPage(Hooks.driver);
+            accountCreatedPage = new AccountCreatedPage(Hooks.getDriver());
             ScenarioContext.put(ScenarioContext.ACCOUNT_CREATED_PAGE, accountCreatedPage);
         }
         accountCreatedPage.clickContinue();
@@ -45,6 +45,6 @@ public class AccountSteps {
     public void iClickLogoutInHeader() {
         LoginPage loginPage = ScenarioContext.get(ScenarioContext.LOGIN_PAGE);
         loginPage.clickLogout();
-        ScenarioContext.put(ScenarioContext.LOGIN_PAGE, new LoginPage(Hooks.driver));
+        ScenarioContext.put(ScenarioContext.LOGIN_PAGE, new LoginPage(Hooks.getDriver()));
     }
 }

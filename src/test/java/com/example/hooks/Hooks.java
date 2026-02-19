@@ -24,41 +24,30 @@ public class Hooks {
 
     private static final Logger log = LoggerFactory.getLogger(Hooks.class);
 
-    public static WebDriver driver;
+    /** One WebDriver per thread for parallel scenario execution. */
+    private static final ThreadLocal<WebDriver> driverHolder = new ThreadLocal<>();
 
-    private static boolean shutdownHookRegistered;
+    public static WebDriver getDriver() {
+        return driverHolder.get();
+    }
 
     @Before
     public void setUp() {
         ScenarioContext.clear();
-        if (driver == null) {
-            driver = WebDriverFactory.create();
-            registerShutdownHook();
+        WebDriver driver = WebDriverFactory.create();
+        driverHolder.set(driver);
 
-            boolean maximize = Boolean.parseBoolean(
-                    ConfigReader.get("maximizeWindow", "false")
-            );
-            if (maximize) {
-                driver.manage().window().maximize();
-            }
+        boolean maximize = Boolean.parseBoolean(
+                ConfigReader.get("maximizeWindow", "false")
+        );
+        if (maximize) {
+            driver.manage().window().maximize();
         }
 
         driver.get(ConfigReader.get("baseUrl"));
         dismissCookieOverlay();
         dismissAdOverlays();
         removeGoogleVignetteFromUrl();
-    }
-
-    private static synchronized void registerShutdownHook() {
-        if (!shutdownHookRegistered) {
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                if (driver != null) {
-                    driver.quit();
-                    driver = null;
-                }
-            }));
-            shutdownHookRegistered = true;
-        }
     }
 
     @BeforeStep
@@ -73,6 +62,8 @@ public class Hooks {
      */
     private void removeGoogleVignetteFromUrl() {
         try {
+            WebDriver driver = getDriver();
+            if (driver == null) return;
             String url = driver.getCurrentUrl();
             if (url != null && url.contains("#google_vignette")) {
                 ((JavascriptExecutor) driver).executeScript(
@@ -89,13 +80,12 @@ public class Hooks {
      */
     private void dismissAdOverlays() {
         try {
-            // 1. Remove from DOM (most effective for Vignette)
+            WebDriver driver = getDriver();
+            if (driver == null) return;
             String removeScript = ""
                     + "document.querySelectorAll('ins.adsbygoogle, .adsbygoogle-noablate, "
                     + "iframe[id*=\"aswift\"], iframe[id*=\"google_ads_iframe\"], iframe[id*=\"ad_iframe\"]').forEach(function(e){ e.remove(); });";
             ((JavascriptExecutor) driver).executeScript(removeScript);
-
-            // 2. Hide remaining (fallback)
             String hideScript = ""
                     + "document.querySelectorAll('iframe[title*=\"Advertisement\"], iframe[title*=\"Reklama\"], [id*=\"google_ads\"]').forEach(function(e){ "
                     + "e.style.setProperty('display','none','important'); e.style.setProperty('visibility','hidden','important'); });";
@@ -110,13 +100,12 @@ public class Hooks {
      */
     private void dismissCookieOverlay() {
         try {
+            WebDriver driver = getDriver();
+            if (driver == null) return;
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-            // Wait for overlay (may not be visible on repeat visits)
             if (driver.findElements(By.cssSelector(".fc-dialog-overlay, .fc-consent")).isEmpty()) {
                 return;
             }
-
-            // Attempt 1: consent button (elementToBeClickable waits for animation)
             By[] acceptSelectors = {
                     By.cssSelector(".fc-cta-consent"),
                     By.cssSelector(".fc-consent .fc-primary-button"),
@@ -129,7 +118,6 @@ public class Hooks {
                     return;
                 }
             }
-            // Attempt 2: hide overlay via JavaScript (fallback)
             ((JavascriptExecutor) driver).executeScript(
                     "var el = document.querySelector('.fc-dialog-overlay'); if(el) el.style.display='none';"
             );
@@ -140,6 +128,7 @@ public class Hooks {
 
     @After
     public void tearDown(Scenario scenario) {
+        WebDriver driver = getDriver();
         if (scenario.isFailed() && driver != null) {
             try {
                 byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
@@ -149,7 +138,9 @@ public class Hooks {
                 log.warn("Failed to attach screenshot to Allure: {}", e.getMessage());
             }
         }
-        // Do not close browser – shared between scenarios.
-        // Closed in shutdown hook after all tests complete.
+        if (driver != null) {
+            driver.quit();
+            driverHolder.remove();
+        }
     }
 }
