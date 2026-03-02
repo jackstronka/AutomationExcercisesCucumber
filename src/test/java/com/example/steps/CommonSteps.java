@@ -130,7 +130,10 @@ public class CommonSteps {
                     contactUsPage.isSuccessMessageVisible(),
                     "Contact Us success message should be visible"
             );
-        } else if ("Your email or password is incorrect!".equals(messageText) && loginPage != null) {
+        } else if ("Your email or password is incorrect!".equals(messageText)) {
+            if (loginPage == null) {
+                loginPage = new LoginPage(Hooks.getDriver());
+            }
             Assert.assertTrue(
                     loginPage.isLoginIncorrectErrorVisible(),
                     "\"Your email or password is incorrect!\" message should be visible"
@@ -150,6 +153,9 @@ public class CommonSteps {
                     "ACCOUNT CREATED! should be visible"
             );
         } else if ("ACCOUNT DELETED!".equals(messageText)) {
+            if (loginPage == null) {
+                loginPage = new LoginPage(Hooks.getDriver());
+            }
             Assert.assertTrue(
                     loginPage.isAccountDeletedMessageVisible(),
                     "ACCOUNT DELETED! should be visible"

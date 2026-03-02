@@ -25,8 +25,8 @@ public class LoginPage extends BasePage {
     // Message when email already exists: <p style="color: red;">Email Address already exist!</p>
     private final By emailAlreadyExistsError = By.xpath("//p[contains(text(),'Email Address already exist!')]");
 
-    // Message on incorrect login: "Your email or password is incorrect!"
-    private final By loginIncorrectError = By.xpath("//p[contains(text(),'Your email or password is incorrect!')]");
+    // Message on incorrect login (site may show with/without "!" or in different tag)
+    private final By loginIncorrectError = By.xpath("//*[contains(.,'Your email or password is incorrect')]");
 
     // ===== Selectors for "Login to your account" section (data-qa from HTML) =====
     private final By loginToYourAccountSection = By.xpath("//*[contains(text(),'Login to your account')]");
@@ -79,7 +79,7 @@ public class LoginPage extends BasePage {
         try {
             long timeout = Long.parseLong(ConfigReader.get("explicitWait", "10"));
             WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
-            shortWait.until(ExpectedConditions.presenceOfElementLocated(loginIncorrectError));
+            shortWait.until(ExpectedConditions.visibilityOfElementLocated(loginIncorrectError));
             return true;
         } catch (Exception e) {
             return false;
