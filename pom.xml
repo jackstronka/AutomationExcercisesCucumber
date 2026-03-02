@@ -108,7 +108,7 @@
                 <include>**/runner/CucumberTestRunner.java</include>
               </includes>
               <parallel>methods</parallel>
-              <threadCount>2</threadCount>
+              <threadCount>3</threadCount>
               <argLine>-javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar</argLine>
               <systemPropertyVariables>
                 <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
