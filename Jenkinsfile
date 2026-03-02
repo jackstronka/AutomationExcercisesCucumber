@@ -80,8 +80,18 @@ pipeline {
                 script {
                     if (isUnix()) {
                         sh 'mvn test -Pcucumber -B -Dheadless=true'
+                        sh '''
+                            echo "========== TEST SUMMARY (Surefire) =========="
+                            for f in target/surefire-reports/*.txt; do [ -f "$f" ] && cat "$f"; done
+                            echo "============================================="
+                        '''
                     } else {
                         bat 'mvn test -Pcucumber -B -Dheadless=true'
+                        bat '''
+                            echo ========== TEST SUMMARY (Surefire) ==========
+                            for %%f in (target\\surefire-reports\\*.txt) do type "%%f"
+                            echo =============================================
+                        '''
                     }
                 }
             }
@@ -97,8 +107,18 @@ pipeline {
                 script {
                     if (isUnix()) {
                         sh 'mvn test -Pcucumber -B -Dheadless=true -Dcucumber.filter.tags=@smoke'
+                        sh '''
+                            echo "========== TEST SUMMARY (Surefire) =========="
+                            for f in target/surefire-reports/*.txt; do [ -f "$f" ] && cat "$f"; done
+                            echo "============================================="
+                        '''
                     } else {
                         bat 'mvn test -Pcucumber -B -Dheadless=true -Dcucumber.filter.tags=@smoke'
+                        bat '''
+                            echo ========== TEST SUMMARY (Surefire) ==========
+                            for %%f in (target\\surefire-reports\\*.txt) do type "%%f"
+                            echo =============================================
+                        '''
                     }
                 }
             }

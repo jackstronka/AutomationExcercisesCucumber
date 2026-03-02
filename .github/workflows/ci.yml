@@ -52,17 +52,18 @@ jobs:
           fi
           rm -rf target/allure-report-dl 2>/dev/null || true
 
+      # Longer explicit wait on CI (runners can be slower than local)
       - name: Run Smoke tests (Pull Request)
         if: github.event_name == 'pull_request'
-        run: mvn test -Pcucumber -B -Dheadless=true "-Dcucumber.filter.tags=@smoke"
+        run: mvn test -Pcucumber -B -Dheadless=true -DexplicitWait=20 "-Dcucumber.filter.tags=@smoke"
 
       - name: Run Full Regression (Push to main)
         if: github.event_name == 'push'
-        run: mvn test -Pcucumber -B -Dheadless=true
+        run: mvn test -Pcucumber -B -Dheadless=true -DexplicitWait=20
 
       - name: Run Weekly Full Regression (Scheduled)
         if: github.event_name == 'schedule'
-        run: mvn test -Pcucumber -B -Dheadless=true
+        run: mvn test -Pcucumber -B -Dheadless=true -DexplicitWait=20
 
       - name: Generate Allure report
         id: generate-allure

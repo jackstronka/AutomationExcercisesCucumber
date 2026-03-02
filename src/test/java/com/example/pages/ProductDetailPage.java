@@ -74,6 +74,6 @@ public class ProductDetailPage extends BasePage {
     @Step("Click View Cart in modal")
     public void clickViewCartInModal() {
         wait.until(ExpectedConditions.elementToBeClickable(viewCartLinkInModal));
-        click(viewCartLinkInModal);
+        clickViaJavaScript(viewCartLinkInModal);
     }
 }

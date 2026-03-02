@@ -35,6 +35,8 @@ public class AccountCreatedPage extends BasePage {
 
     @Step("Click Continue after account created")
     public void clickContinue() {
+        // Wait for heading first so page is loaded, then for the link (CI can be slower)
+        wait.until(ExpectedConditions.visibilityOfElementLocated(accountCreatedHeading));
         clickViaJavaScript(continueButton);
     }
 }
