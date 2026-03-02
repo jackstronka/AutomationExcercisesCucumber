@@ -27,6 +27,23 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                script {
+                    // Standalone Pipeline often has no BRANCH_NAME; detached HEAD gives "HEAD". Detect main/master by ref.
+                    if (env.BRANCH_NAME == null || env.BRANCH_NAME == '' || env.BRANCH_NAME == 'HEAD') {
+                        if (isUnix()) {
+                            def ref = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            def mainRef = sh(script: 'git rev-parse refs/remotes/origin/main 2>/dev/null || true', returnStdout: true).trim()
+                            def masterRef = sh(script: 'git rev-parse refs/remotes/origin/master 2>/dev/null || true', returnStdout: true).trim()
+                            env.BRANCH_NAME = (ref == mainRef ? 'main' : (ref == masterRef ? 'master' : (env.BRANCH_NAME ?: 'HEAD')))
+                        } else {
+                            def ref = bat(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            def mainRef = bat(script: 'git rev-parse refs/remotes/origin/main', returnStdout: true).trim()
+                            def masterRef = ''
+                            try { masterRef = bat(script: 'git rev-parse refs/remotes/origin/master', returnStdout: true).trim() } catch (Exception e) { /* no master */ }
+                            env.BRANCH_NAME = (ref == mainRef ? 'main' : (ref == masterRef ? 'master' : (env.BRANCH_NAME ?: 'HEAD')))
+                        }
+                    }
+                }
             }
         }
 
