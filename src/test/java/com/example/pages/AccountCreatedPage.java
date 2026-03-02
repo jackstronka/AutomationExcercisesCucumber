@@ -3,6 +3,7 @@ package com.example.pages;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 /**
@@ -35,8 +36,11 @@ public class AccountCreatedPage extends BasePage {
 
     @Step("Click Continue after account created")
     public void clickContinue() {
-        // Wait for heading first so page is loaded, then for the link (CI can be slower)
         wait.until(ExpectedConditions.visibilityOfElementLocated(accountCreatedHeading));
-        clickViaJavaScript(continueButton);
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(continueButton)).click();
+        } catch (ElementClickInterceptedException e) {
+            clickViaJavaScript(continueButton);
+        }
     }
 }

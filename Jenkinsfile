@@ -38,9 +38,8 @@ pipeline {
                         } else {
                             def ref = bat(script: 'git rev-parse HEAD', returnStdout: true).trim()
                             def mainRef = bat(script: 'git rev-parse refs/remotes/origin/main', returnStdout: true).trim()
-                            def masterRef = ''
-                            try { masterRef = bat(script: 'git rev-parse refs/remotes/origin/master', returnStdout: true).trim() } catch (Exception e) { /* no master */ }
-                            env.BRANCH_NAME = (ref == mainRef ? 'main' : (ref == masterRef ? 'master' : (env.BRANCH_NAME ?: 'HEAD')))
+                            // Skip origin/master on Windows when repo has no master (avoids fatal error and script noise)
+                            env.BRANCH_NAME = (ref == mainRef ? 'main' : (env.BRANCH_NAME ?: 'HEAD'))
                         }
                     }
                 }
